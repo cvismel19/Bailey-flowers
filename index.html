@@ -1,0 +1,237 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>For Bailey 🌷</title>
+
+<style>
+:root{
+  --bg1:#ffe6f2;
+  --bg2:#fff3e6;
+  --text:#d1006f;
+  --ink:#7a1b4a;
+}
+
+body{
+  margin:0;
+  height:100vh;
+  overflow:hidden;
+  font-family: Arial, sans-serif;
+  background: radial-gradient(circle at 20% 20%, var(--bg2), var(--bg1));
+}
+
+/* Center card */
+.card{
+  position:fixed;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  padding:24px;
+  border-radius:20px;
+  background:rgba(255,255,255,0.25);
+  backdrop-filter:blur(10px);
+  text-align:center;
+  transition:opacity 1s ease, transform 1s ease;
+  z-index:10;
+}
+
+.type{
+  font-size:40px;
+  color:var(--text);
+  border-right:3px solid var(--text);
+  white-space:nowrap;
+  overflow:hidden;
+  animation:caret .8s step-end infinite;
+}
+
+@keyframes caret{
+  50%{border-color:transparent;}
+}
+
+.btn{
+  margin-top:15px;
+  padding:10px 16px;
+  border-radius:12px;
+  border:none;
+  background:white;
+  cursor:pointer;
+  font-weight:bold;
+}
+
+.tulip,.heart,.petal{
+  position:fixed;
+  pointer-events:none;
+  animation:floatUp linear infinite;
+}
+
+@keyframes floatUp{
+  0%{transform:translateY(0);opacity:0;}
+  10%{opacity:1;}
+  100%{transform:translateY(-120vh);opacity:0;}
+}
+
+.burst{
+  position:fixed;
+  animation:burst 1.2s ease-out forwards;
+}
+
+@keyframes burst{
+  to{
+    transform:translate(var(--dx),var(--dy));
+    opacity:0;
+  }
+}
+
+.megaMsg{
+  position:fixed;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  opacity:0;
+  transition:opacity .4s ease;
+  z-index:20;
+}
+
+.megaMsg.show{
+  opacity:1;
+}
+
+.megaText{
+  font-size:60px;
+  font-weight:bold;
+  color:#ff4da6;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="card" id="loveCard">
+<h1 class="type" id="type"></h1>
+
+<p>I made this little tulip universe just for you.</p>
+<p><strong>— from Vis</strong></p>
+
+<button class="btn" id="musicBtn">🎶 Tap for music</button>
+<button class="btn" id="surpriseBtn">🎁 Tap for a surprise</button>
+</div>
+
+<div class="megaMsg" id="megaMsg">
+<div class="megaText">You mean the world to me Bailey 💖</div>
+</div>
+
+<audio id="bgm" loop preload="auto">
+<source src="song.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+
+const MAIN_TEXT = "I love you Bailey ❤️";
+const typeEl = document.getElementById("type");
+
+let i=0;
+function type(){
+  typeEl.textContent = MAIN_TEXT.slice(0,i++);
+  if(i<=MAIN_TEXT.length) setTimeout(type,60);
+}
+type();
+
+function rand(min,max){return Math.random()*(max-min)+min;}
+
+function makeTulip(){
+  const el=document.createElement("div");
+  el.className="tulip";
+  el.textContent="🌷";
+  el.style.left=rand(0,100)+"vw";
+  el.style.fontSize=rand(20,45)+"px";
+  el.style.animationDuration=rand(6,12)+"s";
+  document.body.appendChild(el);
+}
+
+function makeHeart(){
+  const el=document.createElement("div");
+  el.className="heart";
+  el.textContent="💖";
+  el.style.left=rand(0,100)+"vw";
+  el.style.fontSize=rand(18,35)+"px";
+  el.style.animationDuration=rand(6,12)+"s";
+  document.body.appendChild(el);
+}
+
+function makePetal(){
+  const el=document.createElement("div");
+  el.className="petal";
+  el.textContent="🌸";
+  el.style.left=rand(0,100)+"vw";
+  el.style.fontSize=rand(16,28)+"px";
+  el.style.animationDuration=rand(6,12)+"s";
+  document.body.appendChild(el);
+}
+
+for(let j=0;j<120;j++) makeTulip();
+for(let j=0;j<40;j++) makeHeart();
+for(let j=0;j<40;j++) makePetal();
+
+function burst(x,y,count=30){
+  for(let i=0;i<count;i++){
+    const el=document.createElement("div");
+    el.className="burst";
+    el.textContent="💖";
+    el.style.left=x+"px";
+    el.style.top=y+"px";
+
+    const angle=Math.random()*Math.PI*2;
+    const dist=rand(60,160);
+    el.style.setProperty("--dx",Math.cos(angle)*dist+"px");
+    el.style.setProperty("--dy",Math.sin(angle)*dist+"px");
+
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(),1200);
+  }
+}
+
+const surpriseBtn=document.getElementById("surpriseBtn");
+const megaMsg=document.getElementById("megaMsg");
+
+surpriseBtn.addEventListener("click",()=>{
+
+const card=document.getElementById("loveCard");
+card.style.opacity="0";
+card.style.transform="translate(-50%,-60%) scale(.9)";
+
+setTimeout(()=>{card.style.display="none";},1000);
+
+megaMsg.classList.add("show");
+
+const cx=window.innerWidth/2;
+const cy=window.innerHeight/2;
+
+burst(cx,cy,60);
+
+setTimeout(()=>{
+megaMsg.classList.remove("show");
+},1800);
+
+});
+
+const audio=document.getElementById("bgm");
+const btn=document.getElementById("musicBtn");
+
+btn.addEventListener("click",async()=>{
+try{
+await audio.play();
+btn.textContent="⏸ Pause music";
+}catch(e){
+alert("Music couldn't play. Make sure song.mp3 is uploaded to your GitHub repo.");
+}
+});
+
+</script>
+
+</body>
+</html>
